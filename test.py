@@ -1,44 +1,25 @@
-# An elliptic curve is defined by the equation y^2 = x^3 + a*x +b
-# The equation of Secp256k1 is y^2 = x^3 + 7 (a = 0, b = 7)
-# ecc.py should give a valid implementation of elliptic curves
-# base58.py is an implementation of base58
+import base58 as b58
+import priv2add
 
-import ecc
-import hashlib as h
-import base58
-import privateKeyGen as priv
+assert(b58.encode('Cat'.encode()) == 'PdgX')
+assert(b58.encode('12345'.encode()) == '6YvUFcg')
+assert(b58.encode('12345678900987654321'.encode()) == 'gkdhQDvLi23xxgmYXRkKeWzMYN4')
 
-class Point(object):
-    def __init__(self,x,y):
-        self.x=x
-        self.y=y
+privkeys = [
+    "B86FB533ACBF5731910F4D882E8E960760DDC6424DF68434E1A1501B5ACD29DF",
+    "ECD9CF4ADF36AA4DA36ADE586524C305310F196046495E1281EE0AA8D1F0D3FB",
+    "6C68D94F9AB902A7F846905A6904034109534CBFAEB5169849884F5DC0FE8CCA",
+    "30A1B7FDE4F0C309095C26810FEA4DA4024CE43E64E5A5AD2725C520A7B54D2C",
+    "19ADEC76D3AD3318D5D2E872D0A7064492D7992D8F3ED399BA9DA359F0B0EF54"
+]
 
-a = 0
-b = 7
-q = 115792089237316195423570985008687907853269984665640564039457584007908834671663
-x = int("79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798", 16)
-y = int("483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8", 16)
-g = (x, y)
+addresses = [
+    "18E3GBSAJHrqQVoq1rSyUzFoJscM6CSUCe",
+    "1CdAS6XNZMNLbUPA8gVjqSJkkGWKr2NBrN",
+    "1Acf9yfhbSJ4Bm1X3xrvmxVbWxmkJ7Y1Ze",
+    "15PnsuE96aSvTdahJEymwuJfYtTnAa4qMc",
+    "14odkHo3AMofRG73xaLBMvkBAQHPWzcS5v"
+]
 
-p = Point(x, y)
-e = ecc.EC(0,7,q)
-privateKey = priv.privKey()
-r = e.mul(p, privateKey)
-p1 = hex(r.x)
-p2 = hex(r.y)
-print("Private key: "+str(hex(privateKey)))
-print("Public key: 04"+p1[2:]+p2[2:])
-
-ris = "04"+p1[2:]+p2[2:]
-if(len(ris)%2!=0):
-    ris="0"+ris
-#print(ris)
-ris=h.sha256(bytes.fromhex(ris)).digest()
-x=h.new('ripemd160')
-x.update(ris)
-ris=x.hexdigest()
-ris="00"+ris
-risnew=h.sha256(bytes.fromhex(ris)).digest()
-risnew=h.sha256(risnew).hexdigest()
-ris=ris+risnew[0:8]
-print("1"+base58.b58encode(bytes.fromhex(ris)))
+for c, i in enumerate(privkeys):
+    assert(priv2add.getAddress(int(i, 16)) == addresses[c])
