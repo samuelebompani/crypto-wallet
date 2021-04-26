@@ -27,10 +27,14 @@ g = Point(x, y)
 def getAddress(privateKey):
     #r = e.mul(g, privateKey)
     r = ecc.ecProd(g, privateKey)
-    p1 = hex(r.x)
-    p2 = hex(r.y)
+    p1 = hex(r.x)[2:]
+    p2 = hex(r.y)[2:]
+    while len(p1) < 64: 
+        p1 = "0"+p1
+    while len(p2) < 64: 
+        p2 = "0"+p2
     #public key = "04" | r.x | r.y
-    publicKey = "04"+p1[2:]+p2[2:]
+    publicKey = "04"+p1+p2
 
     tmp = publicKey
     if(len(tmp)%2!=0):
