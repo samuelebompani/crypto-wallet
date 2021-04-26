@@ -20,12 +20,13 @@ x = int("79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798", 16)
 y = int("483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8", 16)
 
 g = Point(x, y)
-e = ecc.EC(0,7,q)
+#e = ecc.EC(0,7,q)
 
 #Input: a valid private key
 #Output: a tuple in the form (privateKey, publicKey, P2PKH address)
 def getAddress(privateKey):
-    r = e.mul(g, privateKey)
+    #r = e.mul(g, privateKey)
+    r = ecc.ecProd(g, privateKey)
     p1 = hex(r.x)
     p2 = hex(r.y)
     #public key = "04" | r.x | r.y
