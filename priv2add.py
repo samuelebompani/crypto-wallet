@@ -27,13 +27,12 @@ def getAddress(privateKey):
     r = e.mul(p, privateKey)
     p1 = hex(r.x)
     p2 = hex(r.y)
-    print("Private key: "+str(hex(privateKey)))
+    print("Private key: "+str(hex(privateKey)[2:]))
     print("Public key: 04"+p1[2:]+p2[2:])
 
     ris = "04"+p1[2:]+p2[2:]
     if(len(ris)%2!=0):
         ris="0"+ris
-    #print(ris)
     ris=h.sha256(bytes.fromhex(ris)).digest()
     x=h.new('ripemd160')
     x.update(ris)
